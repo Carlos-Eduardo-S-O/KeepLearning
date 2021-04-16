@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1060397611445",
+    "project_id": "keeplearning-7d728",
+    "storage_bucket": "keeplearning-7d728.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1060397611445:android:80ba14af93de04576641fc",
+        "android_client_info": {
+          "package_name": "com.keeplearning"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1060397611445-sescupbm8jn1hclkf0odmobv453cg28s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.keeplearning",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "1060397611445-ok6brkt4mlp9tn9ano348ndpcqbjfsno.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCimiyDUam54zXdaI96dS1RhABudS9o1WA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1060397611445-jo8el6s9udivak6giiue93jqice7eiee.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
