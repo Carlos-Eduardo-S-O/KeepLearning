@@ -19,8 +19,8 @@ import {
     CenterAddComment,
     ButtonAddComment,
     InputAddComment,
-    DeleteCommentContainerView,
-    CenterDeleteView
+    ModalButtonCommentContainerView,
+    CenterModalButtoonView
 } from '../../assets/style'
 
 const COMMENTS_PER_PAGE = 6
@@ -99,8 +99,10 @@ export default class Comments extends  React.Component {
     addComment = () => {
         const { feedId, comments, newComment } = this.state
         const user = SyncStorage.get("user")
-
-        const comment = [
+        
+        if(newComment == ""){ return }
+        
+        var comment = [
             {
                 "_id": comments.length + 100,
                 "course_id": feedId,
@@ -115,10 +117,12 @@ export default class Comments extends  React.Component {
         ]
 
         this.setState ({
-            comments: [...comment, ...comments]
+            comments: [...comment, ...comments],
+            newComment: ""
         })
 
         this.changeTheVisibilityOfTheAdditionScreen()
+        
     }
 
     changeTheVisibilityOfTheAdditionScreen = () => {
@@ -220,8 +224,8 @@ export default class Comments extends  React.Component {
                 rightButtonWidth={50}
                 rightButtons={
                     [
-                        <DeleteCommentContainerView>
-                            <CenterDeleteView>
+                        <ModalButtonCommentContainerView>
+                            <CenterModalButtoonView>
                                 <Icon 
                                     name="trash"
                                     color="#fff"
@@ -232,8 +236,8 @@ export default class Comments extends  React.Component {
                                         }
                                     }
                                 />
-                            </CenterDeleteView>
-                        </DeleteCommentContainerView>
+                            </CenterModalButtoonView>
+                        </ModalButtonCommentContainerView>
                     ]
                 }
             >

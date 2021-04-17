@@ -133,14 +133,14 @@ export const InputAddComment = styled.View`
     margin-right: auto;
 `;
 
-export const DeleteCommentContainerView = styled.View`
+export const ModalButtonCommentContainerView = styled.View`
     position: relative;
     width: 50px;
     height: 110px;
     background-color: #ff6666;
 `;
 
-export const CenterDeleteView = styled.View`
+export const CenterModalButtoonView = styled.View`
     position: absolute;
     width: 28px;
     height: 28px;
