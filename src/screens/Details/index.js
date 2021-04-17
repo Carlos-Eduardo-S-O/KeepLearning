@@ -8,11 +8,11 @@ import DrawerLayout from 'react-native-drawer-layout'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import More from '../../components/More'
 
-import staticFeeds from '../../assents/dictionaries/feed.json'
-import slide1 from '../../assents/imgs/slide1.jpeg'
-import slide2 from '../../assents/imgs/slide2.jpeg'
-import slide3 from '../../assents/imgs/slide3.jpg'
-import avatar from '../../assents/imgs/logo.jpg'
+import staticFeeds from '../../assets/dictionaries/feed.json'
+import slide1 from '../../assets/imgs/slide1.jpeg'
+import slide2 from '../../assets/imgs/slide2.jpeg'
+import slide3 from '../../assets/imgs/slide3.jpg'
+import avatar from '../../assets/imgs/logo.jpg'
 
 import {
     Avatar,
@@ -24,7 +24,7 @@ import {
     Container,
     Justify,
     ButtonContainer
-} from '../../assents/style'
+} from '../../assets/style'
 
 export default class Details extends React.Component{
     

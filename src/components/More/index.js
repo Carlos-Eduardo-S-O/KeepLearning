@@ -10,7 +10,7 @@ import {
     MenuDivisor,
     RightOnTheSameLine,
     IconContainer
-} from '../../assents/style'
+} from '../../assets/style'
 
 export default class More extends React.Component {
     

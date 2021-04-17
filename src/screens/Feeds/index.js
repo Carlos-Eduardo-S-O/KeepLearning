@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/AntDesign'
 import { Header } from 'react-native-elements'
 import DrawerLayout from 'react-native-drawer-layout'
 
-import staticFeeds from '../../assents/dictionaries/feed.json'
+import staticFeeds from '../../assets/dictionaries/feed.json'
 import FeedCard from '../../components/FeedCard'
 import Menu from '../../components/Menu'
 import LoginMenu from '../../components/LoginMenu'
@@ -13,7 +13,7 @@ import {
     SpecialOnTheSameLine,
     SearchField,
     RightOnTheSameLine
-} from '../../assents/style'
+} from '../../assets/style'
 
 const FEEDS_PER_PAGE = 4
 

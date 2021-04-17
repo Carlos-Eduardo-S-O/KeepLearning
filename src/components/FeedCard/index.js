@@ -6,9 +6,9 @@ import {
     Title,
     Description,
     OnTheSameLine
-} from '../../assents/style'
-import avatar from '../../assents/imgs/logo.jpg'
-import platform from '../../assents/imgs/plataforma.png'
+} from '../../assets/style'
+import avatar from '../../assets/imgs/logo.jpg'
+import platform from '../../assets/imgs/plataforma.png'
 
 export default class FeedCard extends React.Component {
     

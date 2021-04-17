@@ -6,14 +6,14 @@ import Icon from 'react-native-vector-icons/Feather'
 import Moment from 'react-moment'
 import 'moment-timezone'
 
-import staticComments from '../../assents/dictionaries/comments.json'
+import staticComments from '../../assets/dictionaries/comments.json'
 import {
     Title,
     Description,
     RightOnTheSameLine,
     Container,
     OnTheSameLine,
-} from '../../assents/style'
+} from '../../assets/style'
 
 const COMMENTS_PER_PAGE = 6
 

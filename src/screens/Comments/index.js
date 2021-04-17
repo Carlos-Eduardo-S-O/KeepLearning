@@ -8,7 +8,7 @@ import Swipeable from 'react-native-swipeable-row'
 import Moment from 'react-moment'
 import 'moment-timezone'
 
-import staticComments from '../../assents/dictionaries/comments.json'
+import staticComments from '../../assets/dictionaries/comments.json'
 import {
     Title,
     Description,
@@ -21,7 +21,7 @@ import {
     InputAddComment,
     DeleteCommentContainerView,
     CenterDeleteView
-} from '../../assents/style'
+} from '../../assets/style'
 
 const COMMENTS_PER_PAGE = 6
 const MAXIMUM_SIZE_OF_COMMENT = 200
@@ -140,11 +140,7 @@ export default class Comments extends  React.Component {
                 animationType="slide"
                 transparent={true}
 
-                onRequestClose={
-                    () => {
-                        this.refresh()
-                    }
-                }
+                onRequestClose={this.refresh}
             >
                 <AddCommentContainer>
                     <InputAddComment>
@@ -153,11 +149,7 @@ export default class Comments extends  React.Component {
                             editable
                             placeholder={"Digite o seu comentário."}
                             maxLength={MAXIMUM_SIZE_OF_COMMENT}
-                            onChangeText={ 
-                                (text) => {
-                                    this.updateTextNewComment(text)
-                                }
-                            }
+                            onChangeText={this.updateTextNewComment}
                         />
                     </InputAddComment>
                     <CenterAddComment>
@@ -173,11 +165,7 @@ export default class Comments extends  React.Component {
 
                                 title="Salvar"
                                 type="solid"
-                                onPress={
-                                    () => {
-                                        this.addComment()
-                                    }
-                                }
+                                onPress={this.addComment}
                             />
                         </ButtonAddComment>
                         <ButtonAddComment>
@@ -192,11 +180,7 @@ export default class Comments extends  React.Component {
                                 title="Cancelar"
                                 type="solid"
 
-                                onPress={
-                                    () => {
-                                        this.changeTheVisibilityOfTheAdditionScreen()
-                                    }
-                                }
+                                onPress={this.changeTheVisibilityOfTheAdditionScreen}
                             />
                         </ButtonAddComment>
                     </CenterAddComment>
@@ -208,11 +192,7 @@ export default class Comments extends  React.Component {
     removeComment = (commentToRemove) => {
         const { comments } = this.state
         
-        const filteredComments = comments.filter(
-            (comment) => {
-                comment._id !== commentToRemove._id
-            }
-        )
+        const filteredComments = comments.filter(comment => comment._id !== commentToRemove._id)
 
         this.setState({
             comments: filteredComments
@@ -259,7 +239,7 @@ export default class Comments extends  React.Component {
             >
                 <CardView style={{marginBottom: 2}}>
                     <Container>
-                        <Title>{"Você: "}</Title>
+                        <Title>Você: </Title>
                     </Container>
                         
                     <Container >

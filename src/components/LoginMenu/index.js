@@ -2,14 +2,14 @@ import React from 'react'
 import { ScrollView } from 'react-native'
 import Icon from 'react-native-vector-icons/Feather'
 import { LoginOptionsMenu } from '../Login'
-import staticFeeds from '../../assents/dictionaries/websites.json'
+import staticFeeds from '../../assets/dictionaries/websites.json'
 import Toast from 'react-native-simple-toast'
 
 import {
     MenuOption,
     ContainerMenu,
     RightOnTheSameLine,
-} from '../../assents/style'
+} from '../../assets/style'
 
 import { SafeAreaView } from 'react-native-safe-area-context'
 

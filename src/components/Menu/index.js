@@ -2,15 +2,15 @@ import React from 'react'
 import { ScrollView, TouchableOpacity, View} from 'react-native'
 import Icon from 'react-native-vector-icons/Feather'
 import {SafeAreaView } from 'react-native-safe-area-context'
-import staticFeeds from '../../assents/dictionaries/websites.json'
+import staticFeeds from '../../assets/dictionaries/websites.json'
 import {
     Avatar,
     MenuOption,
     ContainerMenu,
     MenuDivisor,
     RightOnTheSameLine,
-} from '../../assents/style'
-import avatar from '../../assents/imgs/logo.jpg'
+} from '../../assets/style'
+import avatar from '../../assets/imgs/logo.jpg'
 
 export default class Menu extends React.Component {
     
