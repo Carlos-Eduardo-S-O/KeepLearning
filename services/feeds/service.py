@@ -77,6 +77,27 @@ def get_feeds_per_course(course_name, page):
         feeds.append(generate_feeds(record))
     
     return jsonify(feeds)
+
+@service.route("/feeds_per_website/<int:website_id>/<int:page>")
+def get_feeds_per_website(website_id, page):
+    feeds = []
+    
+    connection = get_bd_connection()
+    cursor = connection.cursor(dictionary=True)
+    
+    cursor.execute(
+        "SELECT feedId, course, site, description, image1, avatar "+
+        "FROM feeds_for_feeds_screen " +
+        "WHERE siteId = " + str(website_id) + " " +
+        "LIMIT " + str((page - 1) * PAGE_SIZE) + ", " + str(PAGE_SIZE)
+        )
+    
+    result = cursor.fetchall()
+    for record in result:
+        feeds.append(generate_feeds(record))
+    
+    return jsonify(feeds)
+
 if __name__ == "__main__":
     service.run(
         host="0.0.0.0",

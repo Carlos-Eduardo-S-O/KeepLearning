@@ -27,6 +27,10 @@ export const getFeedsPerName = async (course_name, page) => {
     return accessURL(FEEDS_URL + "feeds_per_course/" + course_name + "/" + page)
 }
 
+export const getFeedsPerWebsite = async (websiteId, page) => {
+    return accessURL(FEEDS_URL + "feeds_per_website/" + websiteId + "/" + page)
+}
+
 export const getWebsites = async () => {
     return accessURL(WEBSITES_URL + "websites/")
 }

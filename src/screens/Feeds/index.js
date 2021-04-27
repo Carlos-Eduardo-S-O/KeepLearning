@@ -7,7 +7,7 @@ import DrawerLayout from 'react-native-drawer-layout'
 import FeedCard from '../../components/FeedCard'
 import Menu from '../../components/Menu'
 import LoginMenu from '../../components/LoginMenu'
-import { getFeeds, getFeedsPerName } from '../../api'
+import { getFeeds, getFeedsPerName, getFeedsPerWebsite } from '../../api'
 
 import { 
     SpecialOnTheSameLine,
@@ -32,8 +32,27 @@ export default class Feeds extends React.Component {
         }
     }
 
+    auxiliaryToLoadFeeds = (moreFeeds) => {
+        const { nextPage, feeds } = this.state
+        if (moreFeeds.length) {
+            console.log('Adding ' + moreFeeds.length + ' feeds')
+            
+            this.setState({
+                nextPage: nextPage + 1,
+                feeds: [...feeds, ...moreFeeds],
+                isRefreshing: false,
+                loading: false
+            })
+        } else {
+            this.setState({
+                isRefreshing: false,
+                loading: false
+            })
+        }
+    }
+
     loadFeeds = () =>{ 
-        const { nextPage, feeds, courseName, chosenWebsite } = this.state
+        const { nextPage, courseName, chosenWebsite } = this.state
 
         this.setState({
             loading: true
@@ -41,51 +60,19 @@ export default class Feeds extends React.Component {
         
         if (courseName) {
             getFeedsPerName(courseName, nextPage).then((moreFeeds) =>{
-                if (moreFeeds.length) {
-                console.log('Adding ' + moreFeeds.length + ' feeds')
-                
-                this.setState({
-                    nextPage: nextPage + 1,
-                    feeds: [...feeds, ...moreFeeds],
-                    isRefreshing: false,
-                    loading: false
-                })
-                } else {
-                    this.setState({
-                        isRefreshing: false,
-                        loading: false
-                    })
-                }
+                this.auxiliaryToLoadFeeds(moreFeeds)
             }).catch((error) => {
                 console.error("error accessing feeds: " + error)
             })
         } else if (chosenWebsite) {
-            const moreFeeds = staticFeeds.feeds.filter((feed) => 
-            feed.site._id == chosenWebsite._id
-            )
-            
-            this.setState({
-                feeds: moreFeeds,
-                loading: false,
-                isRefreshing: false
+            getFeedsPerWebsite(chosenWebsite._id, nextPage).then((moreFeeds) => {
+                this.auxiliaryToLoadFeeds(moreFeeds)
+            }).catch((error) => {
+                console.log("Error to loading feeds: " + error)
             })
         }else{
             getFeeds(nextPage).then((moreFeeds) =>{
-                if (moreFeeds.length) {
-                console.log('Adding ' + moreFeeds.length + ' feeds')
-                
-                this.setState({
-                    nextPage: nextPage + 1,
-                    feeds: [...feeds, ...moreFeeds],
-                    isRefreshing: false,
-                    loading: false
-                })
-                } else {
-                    this.setState({
-                        isRefreshing: false,
-                        loading: false
-                    })
-                }
+                this.auxiliaryToLoadFeeds(moreFeeds)
             }).catch((error) => {
                 console.error("error accessing feeds: " + error)
             })
@@ -164,7 +151,9 @@ export default class Feeds extends React.Component {
     filterByWebsite = (website) => {
         
         this.setState({
-            chosenWebsite: website
+            chosenWebsite: website,
+            nextPage: 1,
+            feeds: []
         },
         () => {
             this.loadFeeds()
