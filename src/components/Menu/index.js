@@ -1,8 +1,9 @@
 import React from 'react'
 import { ScrollView, TouchableOpacity, View} from 'react-native'
 import Icon from 'react-native-vector-icons/Feather'
-import {SafeAreaView } from 'react-native-safe-area-context'
-import staticFeeds from '../../assets/dictionaries/websites.json'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { getImage, getWebsites } from '../../api/'
+
 import {
     Avatar,
     MenuOption,
@@ -10,7 +11,6 @@ import {
     MenuDivisor,
     RightOnTheSameLine,
 } from '../../assets/style'
-import avatar from '../../assets/imgs/logo.jpg'
 
 export default class Menu extends React.Component {
     
@@ -18,8 +18,19 @@ export default class Menu extends React.Component {
         super(props)
 
         this.state = {
-            filter: props.filter
+            filter: props.filter,
+            websites: []
         }
+    }
+
+    componentDidMount = () => {
+        getWebsites().then((moreWebsites) => {
+            this.setState({
+                websites: moreWebsites
+            })
+        }).catch((error) => {
+            console.error("Something goes wrong: " + error)
+        })
     }
 
     showWebsite = (website) => {
@@ -35,7 +46,7 @@ export default class Menu extends React.Component {
                     
                 >
                     <RightOnTheSameLine style={{ paddingLeft: 3 }} >
-                        <Avatar source={avatar}/>
+                        <Avatar source={getImage(website.avatar)}/>
                         <MenuOption>{website.name}</MenuOption>
                     </RightOnTheSameLine> 
                     <MenuDivisor/>
@@ -43,6 +54,7 @@ export default class Menu extends React.Component {
         </View>   
         )
     }
+
     showMenuDescription = () => {
         return(
             <RightOnTheSameLine style={
@@ -68,8 +80,9 @@ export default class Menu extends React.Component {
             </RightOnTheSameLine>
         )
     }
+
     render = () => {
-        const websites = staticFeeds.sites
+        const { websites } = this.state
         
         return(
             <SafeAreaView>

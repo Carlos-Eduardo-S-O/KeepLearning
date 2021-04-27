@@ -24,16 +24,6 @@ services:
     networks:
       kpnet:
         ipv4_address: 172.29.1.2
-  database:
-    image: mysql
-    hostname: database
-    expose:
-      - '3306'
-    environment:
-      MYSQL_ROOT_PASSWORD: admin
-    networks:
-      kpnet:
-        ipv4_address: 172.29.1.3
   comments:
     image: keeplearning
     build: ./dockerfiles/services/
@@ -57,7 +47,18 @@ services:
     command: python3 service.py
     networks:
       kpnet:
-        ipv4_address: 172.29.1.6
+        ipv4_address: 172.29.1.5
+  database:
+    image: mysql
+    hostname: database
+    expose:
+      - '3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+    networks:
+      kpnet:
+        ipv4_address: 172.29.1.3
+  
   files:
     image: files
     build: ./dockerfiles/nginx/
@@ -68,7 +69,7 @@ services:
       - '80'
     networks:
       kpnet:
-        ipv4_address: 172.29.1.5
+        ipv4_address: 172.29.1.6
 networks:
   kpnet:
     ipam:

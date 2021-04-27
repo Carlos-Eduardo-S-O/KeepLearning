@@ -7,8 +7,7 @@ import {
     Description,
     OnTheSameLine
 } from '../../assets/style'
-import avatar from '../../assets/imgs/logo.jpg'
-import platform from '../../assets/imgs/plataforma.png'
+import { getImage } from '../../api/'
 
 export default class FeedCard extends React.Component {
     
@@ -30,10 +29,10 @@ export default class FeedCard extends React.Component {
                 }
             }>
                 <Card>
-                    <CardImage source={platform}/>
+                    <CardImage source={getImage(feed.course.blobs[0].file)}/>
                     <CardContent>
                     <OnTheSameLine>
-                        <Avatar source={avatar}/>
+                        <Avatar source={getImage(feed.site.avatar)}/>
                         <Title>{feed.site.name}</Title>
                     </OnTheSameLine>
                     </CardContent>

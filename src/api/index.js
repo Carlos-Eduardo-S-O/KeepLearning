@@ -1,4 +1,6 @@
 const FEEDS_URL = "http://172.29.1.1:5000/"
+const WEBSITES_URL = "http://172.29.1.5:5000/"
+const FILE_URL = "http://172.29.1.6/"
 
 export const accessURL = async (url) => {
     let promise = null;
@@ -24,4 +26,12 @@ export const getFeeds = async (page) => {
 export const getFeedsPerName = async (course_name, page) => {
     return accessURL(FEEDS_URL + "feeds_per_course/" + course_name + "/" + page)
 }
-// 1:33:00
+
+export const getWebsites = async () => {
+    return accessURL(WEBSITES_URL + "websites/")
+}
+
+export const getImage = (imageName) => {
+    return { uri: FILE_URL + "/" + imageName }
+}
+// 1:57:00
