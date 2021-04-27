@@ -4,18 +4,16 @@ import Icon from 'react-native-vector-icons/AntDesign'
 import { Header } from 'react-native-elements'
 import DrawerLayout from 'react-native-drawer-layout'
 
-import staticFeeds from '../../assets/dictionaries/feed.json'
 import FeedCard from '../../components/FeedCard'
 import Menu from '../../components/Menu'
 import LoginMenu from '../../components/LoginMenu'
+import { getFeeds, getFeedsPerName } from '../../api'
 
 import { 
     SpecialOnTheSameLine,
     SearchField,
     RightOnTheSameLine
 } from '../../assets/style'
-
-const FEEDS_PER_PAGE = 4
 
 export default class Feeds extends React.Component {
 
@@ -25,7 +23,7 @@ export default class Feeds extends React.Component {
         this.filterByWebsite = this.filterByWebsite.bind(this)
 
         this.state = {
-            nextPage: 0,
+            nextPage: 1,
             feeds: [],
             loading: false,
             isRefreshing: false,
@@ -42,34 +40,8 @@ export default class Feeds extends React.Component {
         })
         
         if (courseName) {
-            
-            const moreFeeds = staticFeeds.feeds.filter((feed) => 
-                feed.course.name.toLowerCase().includes(courseName.toLowerCase())
-            )
-            
-            this.setState({
-                feeds: moreFeeds,
-
-                loading: false,
-                isRefreshing: false
-            })
-        } else if (chosenWebsite) {
-            const moreFeeds = staticFeeds.feeds.filter((feed) => 
-            feed.site._id == chosenWebsite._id
-            )
-            
-            this.setState({
-                feeds: moreFeeds,
-
-                loading: false,
-                isRefreshing: false
-            })
-        }else{
-            const initialId = nextPage * FEEDS_PER_PAGE + 1
-            const finalId = initialId + FEEDS_PER_PAGE - 1
-            const moreFeeds = staticFeeds.feeds. filter((feed) => feed._id >= initialId && feed._id <= finalId)
-
-            if (moreFeeds.length) {
+            getFeedsPerName(courseName, nextPage).then((moreFeeds) =>{
+                if (moreFeeds.length) {
                 console.log('Adding ' + moreFeeds.length + ' feeds')
                 
                 this.setState({
@@ -78,12 +50,45 @@ export default class Feeds extends React.Component {
                     isRefreshing: false,
                     loading: false
                 })
-            } else {
+                } else {
+                    this.setState({
+                        isRefreshing: false,
+                        loading: false
+                    })
+                }
+            }).catch((error) => {
+                console.error("error accessing feeds: " + error)
+            })
+        } else if (chosenWebsite) {
+            const moreFeeds = staticFeeds.feeds.filter((feed) => 
+            feed.site._id == chosenWebsite._id
+            )
+            
+            this.setState({
+                feeds: moreFeeds,
+                loading: false,
+                isRefreshing: false
+            })
+        }else{
+            getFeeds(nextPage).then((moreFeeds) =>{
+                if (moreFeeds.length) {
+                console.log('Adding ' + moreFeeds.length + ' feeds')
+                
                 this.setState({
+                    nextPage: nextPage + 1,
+                    feeds: [...feeds, ...moreFeeds],
                     isRefreshing: false,
                     loading: false
                 })
-            }
+                } else {
+                    this.setState({
+                        isRefreshing: false,
+                        loading: false
+                    })
+                }
+            }).catch((error) => {
+                console.error("error accessing feeds: " + error)
+            })
         }
     }
 
@@ -102,7 +107,7 @@ export default class Feeds extends React.Component {
     }
     
     refresh = () => {
-        this.setState({ isRefreshing: true, feeds: [], nextPage: 0, courseName: null, chosenWebsite: null}, 
+        this.setState({ isRefreshing: true, feeds: [], nextPage: 1, courseName: null, chosenWebsite: null}, 
             () => {
                 this.loadFeeds()
             }
@@ -137,7 +142,14 @@ export default class Feeds extends React.Component {
                 <Icon style={{padding: 6}} size={28} name="search1"
                     onPress={
                         () => {
-                            this.loadFeeds()
+                            this.setState({
+                                nextPage: 1,
+                                feeds: []
+                            }, 
+                                () => {
+                                    this.loadFeeds()
+                                }
+                            )
                         }
                     }
                 />

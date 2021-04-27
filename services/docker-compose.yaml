@@ -1,0 +1,77 @@
+version: '3'
+services:
+  feeds:
+    image: keeplearning
+    build: ./dockerfiles/services/
+    hostname: feeds
+    expose:
+      - '5000'
+    volumes:
+      - './feeds:/service'
+    command: python3 service.py
+    networks:
+      kpnet:
+        ipv4_address: 172.29.1.1
+  details:
+    image: keeplearning
+    build: ./dockerfiles/services/
+    hostname: details
+    expose:
+      - '5000'
+    volumes:
+      - './details:/service'
+    command: python3 service.py
+    networks:
+      kpnet:
+        ipv4_address: 172.29.1.2
+  database:
+    image: mysql
+    hostname: database
+    expose:
+      - '3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+    networks:
+      kpnet:
+        ipv4_address: 172.29.1.3
+  comments:
+    image: keeplearning
+    build: ./dockerfiles/services/
+    hostname: comments
+    expose:
+      - '5000'
+    volumes:
+      - './comments:/service'
+    command: python3 service.py
+    networks:
+      kpnet:
+        ipv4_address: 172.29.1.4
+  websites:
+    image: keeplearning
+    build: ./dockerfiles/services/
+    hostname: websites
+    expose:
+      - '5000'
+    volumes:
+      - './websites:/service'
+    command: python3 service.py
+    networks:
+      kpnet:
+        ipv4_address: 172.29.1.6
+  files:
+    image: files
+    build: ./dockerfiles/nginx/
+    volumes:
+      - './assets/imagens:/usr/share/nginx/html'
+    hostname: files
+    expose:
+      - '80'
+    networks:
+      kpnet:
+        ipv4_address: 172.29.1.5
+networks:
+  kpnet:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.29.1.0/16

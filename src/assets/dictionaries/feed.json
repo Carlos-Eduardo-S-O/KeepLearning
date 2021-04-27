@@ -6,7 +6,7 @@
             "site": {
                 "_id": 1,
                 "name": "Fundação Bradesco",
-                "logo": "1.jpg",
+                "logo": "1.jpg", 
                 "url": "https://www.ev.org.br/" 
             },
             "course": {
