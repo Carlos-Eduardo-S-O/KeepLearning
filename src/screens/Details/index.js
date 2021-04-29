@@ -52,6 +52,11 @@ export default class Details extends React.Component{
     showTextContainer  = () => {
         const { feed } = this.state
         
+        feedLanguages = feed.course.languages[0]
+        if (feed.course.languages[1]){
+            feedLanguages += ", " + feed.course.languages[1]
+        }
+
         if (feed){
             return(
                 <View>    
@@ -79,7 +84,7 @@ export default class Details extends React.Component{
 
                             <OnTheSameLine>   
                                 <Title2>Idioma: </Title2>
-                                <Description>{feed.course.language} </Description>
+                                <Description>{feedLanguages} </Description>
                             </OnTheSameLine>
 
                             <OnTheSameLine>
@@ -99,6 +104,8 @@ export default class Details extends React.Component{
     showSlides = () => {
         const { feed } = this.state
         let slides = []
+
+        console.log(feed)
 
         for (let i = 0; i < SLIDE_SIZE; i++){
             if (feed.course.blobs[i].file){
@@ -171,14 +178,14 @@ export default class Details extends React.Component{
         
         return(
             <ButtonContainer>
-                 <Button 
+                <Button 
                     title="Acessar Curso"
                     onPress={
                         () =>{
                             Linking.openURL(feed.course.url)
                         }
                     }
-                 />
+                />
             </ButtonContainer>
         )
     }
