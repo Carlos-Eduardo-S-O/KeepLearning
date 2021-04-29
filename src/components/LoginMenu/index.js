@@ -2,7 +2,6 @@ import React from 'react'
 import { ScrollView } from 'react-native'
 import Icon from 'react-native-vector-icons/Feather'
 import { LoginOptionsMenu } from '../Login'
-import staticFeeds from '../../assets/dictionaries/websites.json'
 import Toast from 'react-native-simple-toast'
 
 import {
@@ -79,9 +78,7 @@ export default class LoginMenu extends React.Component {
         close()
     }
     
-    render = () => {
-        const websites = staticFeeds.sites
-        
+    render = () => { 
         return(
             <SafeAreaView>
                 <ScrollView> 

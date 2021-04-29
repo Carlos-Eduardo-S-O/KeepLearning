@@ -52,8 +52,8 @@ def generate_feeds(record):
     return feed
 
 @service.route("/feedDetails/<int:id>")
-def get_feeds(id):
-    feed = None
+def get_feed(id):
+    feed = {}
     
     connection = get_bd_connection()
     cursor = connection.cursor(dictionary=True)

@@ -34,6 +34,7 @@ export default class Feeds extends React.Component {
 
     auxiliaryToLoadFeeds = (moreFeeds) => {
         const { nextPage, feeds } = this.state
+        console.log("here")
         if (moreFeeds.length) {
             console.log('Adding ' + moreFeeds.length + ' feeds')
             
@@ -58,23 +59,23 @@ export default class Feeds extends React.Component {
             loading: true
         })
         
-        if (courseName) {
-            getFeedsPerName(courseName, nextPage).then((moreFeeds) =>{
-                this.auxiliaryToLoadFeeds(moreFeeds)
-            }).catch((error) => {
-                console.error("error accessing feeds: " + error)
-            })
-        } else if (chosenWebsite) {
+        if (chosenWebsite) {
             getFeedsPerWebsite(chosenWebsite._id, nextPage).then((moreFeeds) => {
                 this.auxiliaryToLoadFeeds(moreFeeds)
             }).catch((error) => {
-                console.log("Error to loading feeds: " + error)
+                console.log("Error to loading feeds: ", error)
+            })
+        } else if (courseName) {
+            getFeedsPerName(courseName, nextPage).then((moreFeeds) => {
+                this.auxiliaryToLoadFeeds(moreFeeds)
+            }).catch((error) => {
+                console.error("Error accessing feeds: ", error)
             })
         }else{
             getFeeds(nextPage).then((moreFeeds) =>{
                 this.auxiliaryToLoadFeeds(moreFeeds)
             }).catch((error) => {
-                console.error("error accessing feeds: " + error)
+                console.error("error accessing feeds: ", error)
             })
         }
     }

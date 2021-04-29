@@ -7,12 +7,7 @@ import Icon from 'react-native-vector-icons/Feather'
 import DrawerLayout from 'react-native-drawer-layout'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import More from '../../components/More'
-
-import staticFeeds from '../../assets/dictionaries/feed.json'
-import slide1 from '../../assets/imgs/slide1.jpeg'
-import slide2 from '../../assets/imgs/slide2.jpeg'
-import slide3 from '../../assets/imgs/slide3.jpg'
-import avatar from '../../assets/imgs/logo.jpg'
+import { getFeedForDetails, getImage } from '../../api'
 
 import {
     Avatar,
@@ -25,6 +20,8 @@ import {
     Justify,
     ButtonContainer
 } from '../../assets/style'
+
+const SLIDE_SIZE = 3
 
 export default class Details extends React.Component{
     
@@ -40,17 +37,16 @@ export default class Details extends React.Component{
         }
     }
 
-    loadFeeds = () => {
+    loadFeed = () => {
         const { feedId } = this.state
 
-        const feeds = staticFeeds.feeds
-        const filteredFeeds = feeds.filter((feed) => feed._id === feedId)
-
-        if (filteredFeeds.length){
+        getFeedForDetails(feedId).then((updatedFeed) => {
             this.setState({
-                feed: filteredFeeds[0]
+                feed: updatedFeed
             })
-        }
+        }).catch((error) => {
+            console.error("Error while updating the feed: ", error)
+        })
     }
 
     showTextContainer  = () => {
@@ -61,7 +57,7 @@ export default class Details extends React.Component{
                 <View>    
                     <Container>
                         <OnTheSameLine>
-                            <Avatar source={avatar}/>
+                            <Avatar source={getImage(feed.site.avatar)}/>
                             <Title>{feed.site.name}</Title>
                         </OnTheSameLine> 
                     </Container>
@@ -69,7 +65,7 @@ export default class Details extends React.Component{
                     <Container>
                         <Title>{feed.course.name}</Title>
                     </Container>
-                     
+                    
                     <Container>
                         <Description>{feed.course.description}</Description> 
                     </Container>
@@ -101,7 +97,14 @@ export default class Details extends React.Component{
     }
 
     showSlides = () => {
-        slides = [ slide1, slide2, slide3 ]
+        const { feed } = this.state
+        let slides = []
+
+        for (let i = 0; i < SLIDE_SIZE; i++){
+            if (feed.course.blobs[i].file){
+                slides = [...slides, getImage(feed.course.blobs[i].file)]
+            }
+        }
 
         return(
             <SliderBox
@@ -124,10 +127,6 @@ export default class Details extends React.Component{
     }
 
     showHeader = () => {
-        const { feed } = this.state
-            
-        siteName = feed.site.name
-        
         return(
             <Header backgroundColor="#fff"
                 leftComponent={
@@ -185,7 +184,7 @@ export default class Details extends React.Component{
     }
 
     componentDidMount = () => {
-        this.loadFeeds()
+        this.loadFeed()
     }
     
     hideMoreMenu = () => {

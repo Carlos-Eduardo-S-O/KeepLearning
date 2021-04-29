@@ -5,8 +5,7 @@ import { Header } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/Feather'
 import Moment from 'react-moment'
 import 'moment-timezone'
-
-import staticComments from '../../assets/dictionaries/comments.json'
+import Toast from "react-native-simple-toast"
 import {
     Title,
     Description,
@@ -14,6 +13,7 @@ import {
     Container,
     OnTheSameLine,
 } from '../../assets/style'
+import { getComments } from '../../api'
 
 const COMMENTS_PER_PAGE = 6
 
@@ -25,7 +25,7 @@ export default class CommentsWithoutLogin extends  React.Component {
         this.state = {
             feedId: this.props.navigation.state.params.feedId,
             comments: [],
-            nextPage: 0,
+            nextPage: 1,
             newComment: "",
 
             isRefreshing: false,
@@ -44,28 +44,24 @@ export default class CommentsWithoutLogin extends  React.Component {
             loading: true
         })
 
-        const initialId = nextPage * COMMENTS_PER_PAGE + 1
-        const finalId = initialId + COMMENTS_PER_PAGE -1
+        getComments(feedId, nextPage).then((moreComments) => {
+            if (moreComments.length) {
+                this.setState({
+                    nextPage: nextPage + 1,
+                    comments: [...comments, ...moreComments],
 
-        const moreComments = staticComments.comments.filter(
-            (comment) => comment._id >= initialId && comment._id <= finalId && comment.course_id === feedId
-        )
-
-        if (moreComments.length) {
-            this.setState({
-                nextPage: nextPage + 1,
-                comments: [...comments, ...moreComments],
-
-                loading: false,
-                isRefreshing: false
-            })
-        } else {
-            this.setState({
-                loading: false,
-                isRefreshing: false
-            })
-        }
-        
+                    loading: false,
+                    isRefreshing: false
+                })
+            } else {
+                this.setState({
+                    loading: false,
+                    isRefreshing: false
+                })
+            }
+        }).catch((error) => {
+            console.error("Error displaying comments")
+        })
     }
 
     loadMoreComments = () => {
@@ -79,7 +75,7 @@ export default class CommentsWithoutLogin extends  React.Component {
     }
 
     refresh = () => {
-        this.setState({ isRefreshing: true, loading: false, nextPage: 0, comments: []},
+        this.setState({ isRefreshing: true, loading: false, nextPage: 1, comments: []},
             () => {
                 this.loadComments()
             }        

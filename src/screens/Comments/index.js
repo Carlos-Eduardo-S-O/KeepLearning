@@ -7,8 +7,6 @@ import Icon from 'react-native-vector-icons/Feather'
 import Swipeable from 'react-native-swipeable-row'
 import Moment from 'react-moment'
 import 'moment-timezone'
-
-import staticComments from '../../assets/dictionaries/comments.json'
 import {
     Title,
     Description,
@@ -22,9 +20,9 @@ import {
     ModalButtonCommentContainerView,
     CenterModalButtoonView
 } from '../../assets/style'
+import { getComments, addComment, deleteComment } from '../../api'
 
 const COMMENTS_PER_PAGE = 6
-const MAXIMUM_SIZE_OF_COMMENT = 200
 
 export default class Comments extends  React.Component {
 
@@ -34,7 +32,7 @@ export default class Comments extends  React.Component {
         this.state = {
             feedId: this.props.navigation.state.params.feedId,
             comments: [],
-            nextPage: 0,
+            nextPage: 1,
             newComment: "",
 
             isRefreshing: false,
@@ -54,28 +52,24 @@ export default class Comments extends  React.Component {
             loading: true
         })
 
-        const initialId = nextPage * COMMENTS_PER_PAGE + 1
-        const finalId = initialId + COMMENTS_PER_PAGE -1
+        getComments(feedId, nextPage).then((moreComments) => {
+            if (moreComments.length) {
+                this.setState({
+                    nextPage: nextPage + 1,
+                    comments: [...comments, ...moreComments],
 
-        const moreComments = staticComments.comments.filter(
-            (comment) => comment._id >= initialId && comment._id <= finalId && comment.course_id === feedId
-        )
-
-        if (moreComments.length) {
-            this.setState({
-                nextPage: nextPage + 1,
-                comments: [...comments, ...moreComments],
-
-                loading: false,
-                isRefreshing: false
-            })
-        } else {
-            this.setState({
-                loading: false,
-                isRefreshing: false
-            })
-        }
-        
+                    loading: false,
+                    isRefreshing: false
+                })
+            } else {
+                this.setState({
+                    loading: false,
+                    isRefreshing: false
+                })
+            }
+        }).catch((error) => {
+            console.error("Error displaying comments.", error)
+        })
     }
 
     loadMoreComments = () => {
@@ -89,7 +83,7 @@ export default class Comments extends  React.Component {
     }
 
     refresh = () => {
-        this.setState({ isRefreshing: true, loading: false, nextPage: 0, comments: []},
+        this.setState({ isRefreshing: true, loading: false, nextPage: 1, comments: []},
             () => {
                 this.loadComments()
             }        
@@ -97,30 +91,25 @@ export default class Comments extends  React.Component {
     }
 
     addComment = () => {
-        const { feedId, comments, newComment } = this.state
-        const user = SyncStorage.get("user")
+        const { feedId, newComment } = this.state
         
         if(newComment == ""){ return }
         
-        var comment = [
-            {
-                "_id": comments.length + 100,
-                "course_id": feedId,
-                "user": {
-                    "userId": 2,
-                    "email": user.email,
-                    "name": user.name
-                },
-                "datetime": "2021-03-21T12:00-0500",
-                "comment": newComment
+        addComment(feedId, newComment).then(
+            (result) => {
+                if(result.situation === "ok") {
+                    this.setState({
+                        nextPage: 1,
+                        comments: []
+                    }, () =>{
+                        this.loadComments()
+                    })
+                }
             }
-        ]
-
-        this.setState ({
-            comments: [...comment, ...comments],
-            newComment: ""
+        ).catch((error) => {
+            console.error("Error adding comments", error)
         })
-
+        
         this.changeTheVisibilityOfTheAdditionScreen()
         
     }
@@ -152,7 +141,7 @@ export default class Comments extends  React.Component {
                             multiline
                             editable
                             placeholder={"Digite o seu comentário."}
-                            maxLength={MAXIMUM_SIZE_OF_COMMENT}
+                            maxLength={200}
                             onChangeText={this.updateTextNewComment}
                         />
                     </InputAddComment>
@@ -194,17 +183,20 @@ export default class Comments extends  React.Component {
     }
 
     removeComment = (commentToRemove) => {
-        const { comments } = this.state
-        
-        const filteredComments = comments.filter(comment => comment._id !== commentToRemove._id)
-
-        this.setState({
-            comments: filteredComments
-        },
-            () => {
-                this.refresh()
+        deleteComment(commentToRemove._id).then(
+            (result) => {
+                if (result.situation === "ok"){
+                    this.setState({
+                        nextPage: 1,
+                        comments: []
+                    }, () => {
+                        this.loadComments()
+                    })
+                }
             }
-        )
+        ).catch((error) => {
+            console.error("Error removing comment: " + error)
+        }) 
     }
 
     confirmRemoval = (comment) => {
@@ -219,6 +211,7 @@ export default class Comments extends  React.Component {
     }
 
     showUserComment = (comment) =>{
+        console.log("I was here!")
         return(
             <Swipeable
                 rightButtonWidth={50}
@@ -350,7 +343,7 @@ export default class Comments extends  React.Component {
                 keyExtractor={(item) => String(item._id)}
                 renderItem = {
                     ({item}) => {
-                        if (item.user.email == user.email){
+                        if (item.user.email == user.account){
                             return this.showUserComment(item)
                         } else {
                             return this.showOtherPeopleComment(item)
